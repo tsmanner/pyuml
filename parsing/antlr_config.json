@@ -1,0 +1,9 @@
+{
+  "grammars": [
+    {
+      "language": "c plus plus",
+      "name": "CPP14",
+      "file": "antlrpy/CPP14.g4"
+    }
+  ]
+}

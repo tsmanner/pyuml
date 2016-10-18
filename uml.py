@@ -46,5 +46,5 @@ class PyUML:
 
 
 # Entry point to program, only invoked this way if module called stand alone
-if __name__ == "__main__":
+if __name__ == '__main__':
     pyuml = PyUML('.')

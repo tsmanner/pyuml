@@ -41,3 +41,17 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+
+# ANTLR parsing stuff
+.idea/
+L2LsuDrvr.C
+L2LsuDrvr.h
+L2LsuEvent.C
+L2LsuEvent.h
+parsing/antlr-4.5.3-complete.jar
+parsing/antlrpy/CPP14.tokens
+parsing/antlrpy/CPP14Lexer.py
+parsing/antlrpy/CPP14Lexer.tokens
+parsing/antlrpy/CPP14Listener.py
+parsing/antlrpy/CPP14Parser.py
+parsing/antlrpy/__pycache__/
