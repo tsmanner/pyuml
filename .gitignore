@@ -48,7 +48,6 @@ L2LsuDrvr.C
 L2LsuDrvr.h
 L2LsuEvent.C
 L2LsuEvent.h
-parsing/antlr-4.5.3-complete.jar
 parsing/antlrpy/*.tokens
 parsing/antlrpy/*Lexer.py
 parsing/antlrpy/*Listener.py
