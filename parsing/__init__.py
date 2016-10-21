@@ -7,27 +7,35 @@ import subprocess as sp
 
 
 class GenericListener:
-    @staticmethod
-    def print_node_context(ctx):
+#    @staticmethod
+    def print_node_context(self, ctx):
         print(ctx)
 
 
 class Language:
     def __init__(self, grammar):
-        self.name = grammar["name"]
+        assert grammar["file"].endswith(".g4")
+        self.name = os.path.basename(grammar["file"])[:-3]
         exec("import antlrpy." + self.name + "Lexer")
         exec("import antlrpy." + self.name + "Parser")
         exec("import antlrpy." + self.name + "Listener")
 
-        # TODO: Make this dynamically generated per language with the function
-        # TODO:     associations defined in antlr_config.json
-        class AListener(eval("antlrpy." + self.name + "Listener." + self.name + "Listener")):
-            def enterClassname(self, ctx):
-                GenericListener.print_node_context(ctx)
+        class Listener(eval("antlrpy." + self.name + "Listener." + self.name + "Listener")):
+            pass
+
+        for rule in grammar["rules"]:
+            entercmd = "Listener.enter" + grammar["rules"][rule].capitalize() +\
+                       " = GenericListener.print_node_context"
+            print(entercmd)
+            exec(entercmd)
+            exitcmd = "Listener.exit" + grammar["rules"][rule].capitalize() + \
+                      " = GenericListener.print_node_context"
+            print(exitcmd)
+            exec(exitcmd)
 
         self.lexer = eval("antlrpy." + self.name + "Lexer." + self.name + "Lexer")
         self.parser = eval("antlrpy." + self.name + "Parser." + self.name + "Parser")
-        self.listener = AListener
+        self.listener = Listener
 
     def process(self, filename: str):
         lexer = self.lexer(antlr4.FileStream(filename))
@@ -38,7 +46,7 @@ class Language:
         walker = antlr4.ParseTreeWalker()
         walker.walk(listener, tree)
 
-config = json.load(open("antlr_config.json"))
+config = json.load(open("parser_config"))
 
 antlr_jar = ''
 max_version = '0'
@@ -61,13 +69,14 @@ if antlr_jar == '':
     exit("No antlr jar found!")
 
 
-for grammar in config['grammars']:
-    cmd = ' '.join(['java', '-jar', antlr_jar,
-                    '-Dlanguage=Python3',
-                    '-o', os.path.dirname(grammar['file']),
-                    grammar['file']])
-#    print(cmd)
-    proc = sp.run(cmd, stdout=sp.PIPE)
+for grammar_name in config['grammars']:
+    grammar = config['grammars'][grammar_name]
+    gencmd = ' '.join(['java', '-jar', antlr_jar,
+                       '-Dlanguage=Python3',
+                       '-o', os.path.dirname(grammar['file']),
+                       grammar['file']])
+#    print(gencmd)
+    proc = sp.run(gencmd, stdout=sp.PIPE)
 #    print(proc)
 #    print(proc.stdout)
     l = Language(grammar)
