@@ -1,8 +1,7 @@
 {
   "grammars": {
     "CPP14": {
-      "path": "C:\\Users\\IBM_ADMIN\\Documents\\grammars-v4",
-      "file": "antlrpy/CPP14.g4",
+      "file": "C:\\Users\\IBM_ADMIN\\Documents\\grammars-v4\\cpp\\CPP14.g4",
       "rules": {
         "class": "classname",
         "attribute": "attributespecifierseq",
