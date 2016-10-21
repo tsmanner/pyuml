@@ -34,12 +34,18 @@ if antlr_jar == '':
 
 
 class GenericListener:
+    """
+    Generic class that our language specific listeners can reference.
+    """
     @staticmethod
     def print_node_context(listener, ctx):
-        print(ctx)
+        print(listener, ctx)
 
 
 class Language:
+    """
+    Class representing a Language and all of it's Lexing, Parsing, and Listening classes
+    """
     def __init__(self, grammar_config: dict):
         """
         Take some grammar configuration information and create a language out of it.
@@ -73,18 +79,18 @@ class Language:
             print(exitcmd)
             exec(exitcmd)
 
-        self.lexer = eval("antlrpy." + self.name + "Lexer." + self.name + "Lexer")
-        self.parser = eval("antlrpy." + self.name + "Parser." + self.name + "Parser")
-        self.listener = Listener
+        self.lexer_factory = eval("antlrpy." + self.name + "Lexer." + self.name + "Lexer")
+        self.parser_factory = eval("antlrpy." + self.name + "Parser." + self.name + "Parser")
+        self.listener_factory = Listener
 
     def process(self, filename: str):
-        lexer = self.lexer(antlr4.FileStream(filename))
+        lexer = self.lexer_factory(antlr4.FileStream(filename))
         tokens = antlr4.CommonTokenStream(lexer)
-        parser = self.parser(tokens)
+        parser = self.parser_factory(tokens)
         # TODO: This is the broken step... Figure out how to tell it which rule to start with
         parser.expression()
 #        walker = antlr4.ParseTreeWalker()
-#        walker.walk(self.listener(), parser.expression())
+#        walker.walk(self.listener_factory(), parser_factory.expression())
 
 
 for grammar_name in config['grammars']:
